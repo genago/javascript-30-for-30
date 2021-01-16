@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Drum Kit</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+  <div class="keys">
+    <div data-key="65" class="key">
+      <kbd>A</kbd>
+      <span class="sound">clap</span>
+    </div>
+    <div data-key="83" class="key">
+      <kbd>S</kbd>
+      <span class="sound">hihat</span>
+    </div>
+    <div data-key="68" class="key">
+      <kbd>D</kbd>
+      <span class="sound">kick</span>
+    </div>
+    <div data-key="70" class="key">
+      <kbd>F</kbd>
+      <span class="sound">openhat</span>
+    </div>
+    <div data-key="71" class="key">
+      <kbd>G</kbd>
+      <span class="sound">boom</span>
+    </div>
+    <div data-key="72" class="key">
+      <kbd>H</kbd>
+      <span class="sound">ride</span>
+    </div>
+    <div data-key="74" class="key">
+      <kbd>J</kbd>
+      <span class="sound">snare</span>
+    </div>
+    <div data-key="75" class="key">
+      <kbd>K</kbd>
+      <span class="sound">tom</span>
+    </div>
+    <div data-key="76" class="key">
+      <kbd>L</kbd>
+      <span class="sound">tink</span>
+    </div>
+  </div>
+
+  <audio data-key="65" src="sounds/clap.wav"></audio>
+  <audio data-key="83" src="sounds/hihat.wav"></audio>
+  <audio data-key="68" src="sounds/kick.wav"></audio>
+  <audio data-key="70" src="sounds/openhat.wav"></audio>
+  <audio data-key="71" src="sounds/boom.wav"></audio>
+  <audio data-key="72" src="sounds/ride.wav"></audio>
+  <audio data-key="74" src="sounds/snare.wav"></audio>
+  <audio data-key="75" src="sounds/tom.wav"></audio>
+  <audio data-key="76" src="sounds/tink.wav"></audio>
+
+<script> // no console.log 
+console.log('hello')
+
+// I. event listener and query selector #1-7
+window.addEventListener('keydown', function(e) {
+/* I.  #1 3:50 listening for a keydown event
+first get element you're listening for- listen on window for event 'keydown'
+ then add function to give event.  (e) is the event- the object full of data 
+ describing event which key is pressed. */
+
+ console.log(e.keyCode)
+ const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+/*  #2 5:29 select/declare audio element for data-keys.
+use attribute selector audio followed by data-key then template $tring to pick variable
+that lives inside event e.keyCode ()
+should be able to play sound console.log  */
+console.log('audio')
+
+
+ 
+  const key = document.querySelector(`.key[data-key="${e.keyCode}"]`); //I.  #6 8:59 select key to add animation with class of .key ? console.log
+  if (!audio) return;  //  #3 7:20 if !no audio the return to stop the function //
+  audio.currentTime = 0; //  #5 8:25 rewind to the start to speed up playback
+  audio.play();  //  #4 console.log #3 at 7:34
+  key.classList.add('playing');  /*  #7 10:00 css-.playing(scale) and .key(transition). for animation when key press lights up keys,
+   "adding them". */
+  
+});
+
+// II. 11:50-add transition end event
+function removeTransition(e){ // #10 made/add function for #9 for when transition ending
+// console.log show too many transitions when we are only looking for 'transform'
+  if(e.propertyName !== 'transform');  // #11 skip if !not 'transform'
+  this.classList.remove('playing'); //#12 removed #7
+  /* #12 this ?, to see what is this = to, console.log(this) this is always equal to whatever gets called against it, addEventListener
+   got called. key. got called against it ? */
+};
+
+
+const keys = document.querySelectorAll('.key'); /* #8 select every key to listen on each one. remove class use transition end event instead
+ of setTimer bc it could get out of sync through diff developers. transition end will.  */
+
+
+keys.forEach(key => key.addEventListener('transitionend', removeTransition))/* #9 listen for event transitionend forEach key. must loop over each element 
+and attach eventListener bc with an array(node list) you cannot listen to all of them? removeTransition when ends */
+
+/*at the end he removes the function from window.addEventListener bc does not like adding functions to keydown. 
+moves window.addEventListener to bottom of script under keys.forEach. 
+renames stand alone function to function playSound(e) containing const audio, const key, and if(!audio)
+renames window.addEventListener to window.addEventListener('keydown', playSound) */
+</script>
+
+
+</body>
+</html>
